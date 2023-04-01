@@ -1,0 +1,2 @@
+# SmartieAI
+based on gpt-3.5-turbo

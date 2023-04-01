@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  chatgpt-demo:
-    image: ddiu8081/chatgpt-demo:latest
-    container_name: chatgpt-demo
+  smartie-ai:
+    image: edianyun/smartie-ai:latest
+    container_name: smartie-ai
     restart: always
     ports:
         - "3000:3000"

@@ -28,7 +28,7 @@ export default (props: Props) => {
               <Show when={props.canEdit()} fallback={<IconEnv />}>
                 <span onClick={() => props.setCurrentSystemRoleSettings('')} class="sys-edit-btn p-1 rd-50%" > <IconX /> </span>
               </Show>
-              <span>System Role (Prompt): </span>
+              <span>Prompt: </span>
             </div>
             <div class="mt-1">
               {props.currentSystemRoleSettings()}
@@ -38,7 +38,7 @@ export default (props: Props) => {
         <Show when={!props.currentSystemRoleSettings() && props.canEdit()}>
           <span onClick={() => props.setSystemRoleEditing(!props.systemRoleEditing())} class="sys-edit-btn">
             <IconEnv />
-            <span>Add System Role (Prompt)</span>
+            <span>Prompt</span>
           </span>
         </Show>
       </Show>
@@ -46,13 +46,13 @@ export default (props: Props) => {
         <div>
           <div class="fi gap-1 op-50 dark:op-60">
             <IconEnv />
-            <span>System Role (Prompt)</span>
+            <span>Prompt</span>
           </div>
-          <p class="my-2 leading-normal text-sm op-50 dark:op-60">Gently instruct the assistant and set the behavior of the assistant.</p>
+          <p class="my-2 leading-normal text-sm op-50 dark:op-60">提示助手如何思考，设定助手行为.如答案提示、任务提示、角色行为</p>
           <div>
             <textarea
               ref={systemInputRef!}
-              placeholder="You are a helpful assistant, answer as concisely as possible...."
+              placeholder="示例：请阅读以下邮件，删除任何可用于识别个人身份的信息 (PII)，并用相应的占位符替换它。例如，用\[姓名\]替换 John Doe。"
               autocomplete="off"
               autofocus
               rows="3"
@@ -60,7 +60,7 @@ export default (props: Props) => {
             />
           </div>
           <button onClick={handleButtonClick} gen-slate-btn>
-            Set
+            设置
           </button>
         </div>
       </Show>

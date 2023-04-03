@@ -7,6 +7,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import vercel from '@astrojs/vercel/edge'
 import netlify from '@astrojs/netlify/edge-functions'
 import disableBlocks from './plugins/disableBlocks'
+import VitePluginCompression from 'vite-plugin-compression';
 
 const envAdapter = () => {
   if (process.env.OUTPUT === 'vercel') {
@@ -29,7 +30,38 @@ export default defineConfig({
   output: 'server',
   adapter: envAdapter(),
   vite: {
+    server: {
+      proxy: {
+          "/api": {
+              target: "https://ai.edianzu.com",
+              changeOrigin: true,
+              rewrite: (path) => path.replace("/api", "/api"),
+          },
+      },
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            // console.log(id);
+            // if(id.includes('markdown-it/')){ //利用文件目录判断
+            //   console.log(id.toString().split('markdown-it/')[1].split('.')[0].toString());
+            //   return id.toString().split('markdown-it/')[1].split('.')[0].toString();
+            // }
+            // if(id.includes('markdown-it-katex/')){ //利用文件目录判断
+            //   console.log(id.toString().split('markdown-it-katex/')[1].split('.')[0].toString());
+            //   return id.toString().split('markdown-it-katex/')[1].split('.')[0].toString();
+            // }
+            if(id.includes('markdown-it-highlightjs/')){ //利用文件目录判断
+              console.log(id.toString().split('markdown-it-highlightjs/')[1].split('.')[0].toString());
+              return id.toString().split('markdown-it-highlightjs/')[1].split('.')[0].toString();
+            }
+          }
+        }
+      },
+    },
     plugins: [
+      VitePluginCompression(),
       process.env.OUTPUT === 'vercel' && disableBlocks(),
       process.env.OUTPUT === 'netlify' && disableBlocks('netlify'),
       process.env.OUTPUT !== 'netlify' && VitePWA({

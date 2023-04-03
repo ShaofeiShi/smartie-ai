@@ -43,6 +43,7 @@
     "punycode": "^2.3.0",
     "unocss": "^0.50.1",
     "@evan-yang/eslint-config": "^1.0.1",
-    "vite-plugin-pwa": "^0.14.1"
+    "vite-plugin-pwa": "^0.14.1",
+    "vite-plugin-compression": "^0.5.1"
   }
 }

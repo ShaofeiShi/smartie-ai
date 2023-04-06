@@ -1,8 +1,8 @@
-import { Index, Show, createSignal, onCleanup, onMount } from 'solid-js'
+import { Index, Show, createSignal, onCleanup, onMount, lazy } from 'solid-js'
 import { useThrottleFn } from 'solidjs-use'
 import { generateSignature } from '@/utils/auth'
 import IconClear from './icons/Clear'
-import MessageItem from './MessageItem'
+// import MessageItem from './MessageItem'
 import SystemRoleSettings from './SystemRoleSettings'
 import ErrorMessageItem from './ErrorMessageItem'
 import type { ChatMessage, ErrorMessage } from '@/types'
@@ -179,6 +179,30 @@ export default () => {
     }
   }
 
+  const renderMessageResult = () => {
+      const MessageItem = lazy(() => import("./MessageItem"));
+      return <MessageItem
+        role="assistant"
+        message={currentAssistantMessage}
+      />
+  }
+  const renderMessageList = () => {
+    return <div>
+      <Index each={messageList()}>
+        {(message, index) => {
+          const MessageItem = lazy(() => import("./MessageItem"));
+            return <MessageItem
+            role={message().role}
+            message={message().content}
+            showRetry={() => (message().role === 'assistant' && index === messageList().length - 1)}
+            onRetry={retryLastFetch}
+          />
+        }}
+      </Index>
+      {currentAssistantMessage() && renderMessageResult()}
+    </div>
+  }
+
   return (
     <div my-6>
       <SystemRoleSettings
@@ -188,22 +212,7 @@ export default () => {
         currentSystemRoleSettings={currentSystemRoleSettings}
         setCurrentSystemRoleSettings={setCurrentSystemRoleSettings}
       />
-      <Index each={messageList()}>
-        {(message, index) => (
-          <MessageItem
-            role={message().role}
-            message={message().content}
-            showRetry={() => (message().role === 'assistant' && index === messageList().length - 1)}
-            onRetry={retryLastFetch}
-          />
-        )}
-      </Index>
-      {currentAssistantMessage() && (
-        <MessageItem
-          role="assistant"
-          message={currentAssistantMessage}
-        />
-      )}
+      { renderMessageList()}
       { currentError() && <ErrorMessageItem data={currentError()} onRetry={retryLastFetch} /> }
       <Show
         when={!loading()}

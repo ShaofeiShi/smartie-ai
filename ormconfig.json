@@ -1,0 +1,20 @@
+{
+    "type": "mysql",
+    "host": "mysql.sqlpub.com",
+    "port": 3306,
+    "username": "edianyun",
+    "password": "7c126dd1f9edb592",
+    "database": "smartie",
+    "synchronize": true,
+    "logging": false,
+    "entities": [
+       "src/entity/**/*.ts"
+    ],
+    "migrations": [
+       "src/migration/**/*.ts"
+    ],
+    "subscribers": [
+       "src/subscriber/**/*.ts"
+    ]
+ }
+ 

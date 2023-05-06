@@ -1,6 +1,7 @@
 {
   "extends": "astro/tsconfigs/base",
   "compilerOptions": {
+    "target": "ES6",
     "baseUrl": ".",
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
@@ -8,5 +9,7 @@
     "paths": {
       "@/*": ["src/*"],
     },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
   }
 }

@@ -9,6 +9,8 @@ import netlify from '@astrojs/netlify/edge-functions'
 import VitePluginCompression from 'vite-plugin-compression'
 import disableBlocks from './plugins/disableBlocks'
 
+// require('reflect-metadata')
+
 const envAdapter = () => {
   if (process.env.OUTPUT === 'vercel') {
     return vercel()
@@ -39,6 +41,9 @@ export default defineConfig({
     //       },
     //   },
     // },
+    ssr: {
+      noExternal: ['path-to-regexp'],
+    },
     build: {
       rollupOptions: {
         output: {

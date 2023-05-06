@@ -28,7 +28,7 @@
     "markdown-it": "^13.0.1",
     "markdown-it-highlightjs": "^4.0.1",
     "markdown-it-katex": "^2.0.3",
-    "reflect-metadata": "^0.1.13",
+    "mysql2": "^3.3.0",
     "solid-js": "1.6.12",
     "solidjs-use": "^1.2.0",
     "typeorm": "^0.3.15",

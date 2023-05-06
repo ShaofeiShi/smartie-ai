@@ -1,4 +1,9 @@
 import { sha256 } from 'js-sha256'
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
+const mysql = require('mysql2')
+import {getConfig} from './config'
+
 interface AuthPayload {
   t: number
   m: string
@@ -29,4 +34,23 @@ export const verifySignature = async(payload: AuthPayload, sign: string) => {
   // }
   const payloadSign = await generateSignature(payload)
   return payloadSign === sign
+}
+export async function findUser(){
+  let connection = mysql.createConnection({
+      "host" : 'mysql.sqlpub.com',
+      "user" : 'edianyun',
+      "password" : '7c126dd1f9edb592',
+      "database" : 'smartie',
+      "connectTimeout": 1000,
+      "multipleStatements": true,
+    })
+  connection.connect();
+  
+  connection.query('select * from users limit 1', function (error, results, fields) {
+    if (error){
+      console.error('error connecting: ' + error.stack);
+      return;
+    }
+    console.log('The data is: ', results[0]);
+  });
 }

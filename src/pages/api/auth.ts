@@ -1,11 +1,5 @@
-import { createRequire } from 'module'
-const require = createRequire(import.meta.url)
-require('reflect-metadata')
-
-import { createConnection } from 'typeorm'
-import User from 'src/entity/User'
 import type { APIRoute } from 'astro'
-
+import {findUser} from '../../utils/auth'
   
 const realPassword = import.meta.env.SITE_PASSWORD
 
@@ -15,11 +9,8 @@ export const post: APIRoute = async(context) => {
   const { pass } = body
   const test = null
 
-  createConnection().then(async(connection) => {
-    const firstUser = await connection.manager.findOne(User)
-    console.log('get User: ', firstUser)
-  }).catch(error => console.log(error))
-
+  findUser()
+  
   return new Response(JSON.stringify({
     code: (!realPassword || test === realPassword) ? 0 : -1,
   }))

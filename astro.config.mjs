@@ -9,7 +9,6 @@ import netlify from '@astrojs/netlify/edge-functions'
 import VitePluginCompression from 'vite-plugin-compression'
 import disableBlocks from './plugins/disableBlocks'
 
-// require('reflect-metadata')
 
 const envAdapter = () => {
   if (process.env.OUTPUT === 'vercel') {

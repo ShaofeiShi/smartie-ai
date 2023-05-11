@@ -1,17 +1,24 @@
+import { findOneUserByPwd, generateToken, verifyToken } from '../../utils/auth'
 import type { APIRoute } from 'astro'
-import {findUser} from '../../utils/auth'
-  
-const realPassword = import.meta.env.SITE_PASSWORD
 
-export const post: APIRoute = async(context) => {
-  const body = await context.request.json()
-
-  const { pass } = body
-  const test = null
-
-  findUser()
-  
-  return new Response(JSON.stringify({
-    code: (!realPassword || test === realPassword) ? 0 : -1,
-  }))
+export const get: APIRoute = async(context) => {
+  // 从cookie中获取token
+  const token = context.cookies.get('token').value
+  console.log(token)
+  const result = { code: 0, data: {}, message: '登录成功' }
+  if (token) {
+    const payload = verifyToken(token)
+    console.log(payload)
+    if (payload) {
+      result.data = payload
+    } else {
+      context.cookies.delete('token', { path: '/' })
+      result.code = -1
+      result.message = '请先登录'
+    }
+  } else {
+    result.code = -1
+    result.message = '请先登录'
+  }
+  return new Response(JSON.stringify(result))
 }

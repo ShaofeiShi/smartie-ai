@@ -29,48 +29,68 @@ import Layout from '../layouts/Layout.astro';
       ></svg
     >
     <span class="gpt-subtitle">小易智能<br /><br /><br /></span>
-    <div class="op-30">请输入密码</div>
-    <div id="input_container" class="flex mt-4">
-      <input id="password_input" type="password" class="gpt-password-input" />
-      <div id="submit" class="gpt-password-submit">
-        <div class="i-carbon-arrow-right"></div>
+    <div class="op-30">请在下方输入用户名和密码，没有账号？ <a href="/register">立即注册</a></div>
+    <div calss="w-96">
+      <div id="input_container" class="flex mt-4 w-full">
+        <div >用户名：<input id="username_input" type="text" placeholder="邮箱/昵称" class="gpt-password-input w-64" /></div>
+      </div>
+      <div id="input_container" class="flex mt-4 w-full">
+        <div>密　码：<input id="password_input" type="password" placeholder="8-20位大小写字母和数字" class="gpt-password-input" /></div>
+        <div id="submit" class="gpt-password-submit">
+          <div class="i-carbon-arrow-right"></div>
+        </div>
       </div>
     </div>
   </main>
 </Layout>
 
 <script>
-const inputContainer = document.getElementById(
-  'input_container',
-) as HTMLDivElement
-const input = document.getElementById('password_input') as HTMLInputElement
+
+const userInput = document.getElementById('username_input') as HTMLInputElement
+const pwdInput = document.getElementById('password_input') as HTMLInputElement
 const submitButton = document.getElementById('submit') as HTMLDivElement
 
-input.onkeydown = async(event) => {
+pwdInput.onkeydown = async(event) => {
   if (event.key === 'Enter') handleSubmit()
+}
+function showInvalid() {
+  const me = this.parentNode
+  me.classList.add('invalid')
+  setTimeout(() => {
+    me.classList.remove('invalid')
+  }, 300)
 }
 submitButton.onclick = handleSubmit
 
 async function handleSubmit() {
-  const password = input.value
-  const response = await fetch('/api/auth', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      pass: password,
-    }),
-  })
-  const responseJson = await response.json()
-  if (responseJson.code === 0) {
-    localStorage.setItem('pass', password)
-    window.location.href = '/'
+  const username = userInput.value
+  const password = pwdInput.value
+  if (!username) {
+    showInvalid.call(userInput)
+    return
+  }
+  if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,20}$/.test(password)) {
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user: username,
+        pass: password,
+      }),
+    })
+    const responseJson = await response.json()
+    if (responseJson.code === 0) {
+    // localStorage.setItem('pass', password)
+
+      window.location.href = '/'
+    } else {
+      alert(responseJson.message)
+    }
   } else {
-    inputContainer.classList.add('invalid')
-    setTimeout(() => {
-      inputContainer.classList.remove('invalid')
-    }, 300)
+    showInvalid.call(pwdInput)
+    // alert('密码格式不正确，请输入8-20位的由大小写字母和数字组成的密码')
   }
 }
 </script>

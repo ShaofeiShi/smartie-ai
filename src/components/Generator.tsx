@@ -1,4 +1,4 @@
-import { Index, Show, createSignal, onCleanup, onMount, lazy } from 'solid-js'
+import { Index, Show, createSignal, lazy, onCleanup, onMount } from 'solid-js'
 import { useThrottleFn } from 'solidjs-use'
 import { generateSignature } from '@/utils/auth'
 import IconClear from './icons/Clear'
@@ -180,27 +180,27 @@ export default () => {
   }
 
   const renderMessageResult = () => {
-      const MessageItem = lazy(() => import("./MessageItem"));
-      return <MessageItem
-        role="assistant"
-        message={currentAssistantMessage}
-      />
+    const MessageItem = lazy(() => import('./MessageItem'))
+    return (<MessageItem
+      role="assistant"
+      message={currentAssistantMessage}
+            />)
   }
   const renderMessageList = () => {
-    return <div>
+    return (<div>
       <Index each={messageList()}>
         {(message, index) => {
-          const MessageItem = lazy(() => import("./MessageItem"));
-            return <MessageItem
+          const MessageItem = lazy(() => import('./MessageItem'))
+          return (<MessageItem
             role={message().role}
             message={message().content}
             showRetry={() => (message().role === 'assistant' && index === messageList().length - 1)}
             onRetry={retryLastFetch}
-          />
+                  />)
         }}
       </Index>
       {currentAssistantMessage() && renderMessageResult()}
-    </div>
+    </div>)
   }
 
   return (

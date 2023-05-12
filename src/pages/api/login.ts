@@ -1,4 +1,5 @@
-import { findOneUserByPwd, generateToken } from '../../utils/auth'
+import { findOneUserByPwd } from '../../utils/user'
+import { generateToken } from '../../utils/jwt'
 import type { APIRoute } from 'astro'
 // [
 //   {

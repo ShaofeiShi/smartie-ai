@@ -1,4 +1,5 @@
-import { addNewUser, findOneUserByName, generateToken } from '../../utils/auth'
+import { addNewUser, findOneUserByName } from '../../utils/user'
+import { generateToken } from '../../utils/jwt'
 import type { APIRoute } from 'astro'
 // [
 //   {

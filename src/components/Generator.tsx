@@ -200,7 +200,7 @@ export default () => {
         }}
       </Index>
       {currentAssistantMessage() && renderMessageResult()}
-    </div>)
+            </div>)
   }
 
   return (

@@ -22,12 +22,23 @@ export const post: APIRoute = async(context) => {
       },
     }), { status: 400 })
   }
-  if (!verifyToken(token)) {
+  const validateUser = verifyToken(token)
+
+  const periodTime = new Date(validateUser.period_time).getTime()
+  const now = new Date().getTime()
+  if (!validateUser) {
     return new Response(JSON.stringify({
       error: {
         message: 'Invalid token.',
       },
     }), { status: 401 })
+  }
+  if (now > periodTime) {
+    return new Response(JSON.stringify({
+      error: {
+        message: '您的会员已过期.',
+      },
+    }), { status: 403 })
   }
   // if (sitePassword && sitePassword !== pass) {
   //   return new Response(JSON.stringify({

@@ -4,11 +4,12 @@ import type { APIRoute } from 'astro'
 export const get: APIRoute = async(context) => {
   // 从cookie中获取token
   const token = context.cookies.get('token').value
-  console.log(token)
+
   const result = { code: 0, data: {}, message: '登录成功' }
 
   const validateUser = verifyToken(token)
   console.log(validateUser)
+
   if (validateUser) {
     result.data = validateUser
   } else {

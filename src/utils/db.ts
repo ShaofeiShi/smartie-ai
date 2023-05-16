@@ -1,19 +1,11 @@
 
 import { createRequire } from 'module'
+
+import { config } from '../../config'
 const require = createRequire(import.meta.url)
 const mysql = require('mysql2')
 
-const connectConfig = {
-  host: 'mysql.sqlpub.com',
-  user: 'edianyun',
-  password: '7c126dd1f9edb592',
-  database: 'smartie',
-  connectTimeout: 1000,
-  connectionLimit: 10,
-  multipleStatements: true,
-}
-
-const pool = mysql.createPool(connectConfig)
+const pool = mysql.createPool(config.dbConnect)
 pool.on('error', (err) => {
   throw err
   return

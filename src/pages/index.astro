@@ -8,7 +8,28 @@ import '../message.css'
 import 'katex/dist/katex.min.css'
 import 'highlight.js/styles/atom-one-dark.css'
 ---
+<script>
+// function getCookieToken(cookieName) {
+//   const cookieString = document.cookie
 
+//   const cookies = cookieString.split('; ')
+
+//   for (let i = 0; i < cookies.length; i++) {
+//     const cookiePair = cookies[i].split('=')
+
+//     if (cookiePair[0] === cookieName)
+//       return cookiePair[1]
+//   }
+
+//   return null
+// }
+// const token = getCookieToken('token')
+// if (!token)
+//   console.log(1)
+// else
+//   console.log(token)
+// window.location.href = '/login'
+</script>
 <Layout title="小易智能 (GPT3.5)">
   <main >
     <Header />
@@ -19,20 +40,20 @@ import 'highlight.js/styles/atom-one-dark.css'
 </Layout>
 
 <script>
-async function checkCurrentAuth() {
-  // const password = localStorage.getItem('pass')
-  const response = await fetch('/api/auth', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  const responseJson = await response.json()
+// async function checkCurrentAuth() {
+//   // const password = localStorage.getItem('pass')
+//   const response = await fetch('/api/auth', {
+//     method: 'GET',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   })
+//   const responseJson = await response.json()
 
-  if (responseJson.code !== 0) {
-    alert(responseJson.message)
-    window.location.href = '/login'
-  }
-}
-checkCurrentAuth()
+//   if (responseJson.code !== 0) {
+//     alert(responseJson.message)
+//     window.location.href = '/login'
+//   }
+// }
+// checkCurrentAuth()
 </script>

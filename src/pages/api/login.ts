@@ -21,10 +21,10 @@ export const post: APIRoute = async(context) => {
   try {
     const res = await findOneUserByPwd(user, pass)
     if (res.length) {
-      const { id, email, nickname } = res[0]
-      const token = generateToken({ id, nickname })
-      result.data = { id, nickname }
-      context.cookies.set('token', token, { path: '/', httpOnly: true, maxAge: 1000 * 60 * 60 * 12, sameSite: 'strict', secure: true })
+      const { id, email, nickname, period_time } = res[0]
+      const token = generateToken({ id, nickname, period_time })
+      result.data = { id, nickname, period_time }
+      context.cookies.set('token', token, { path: '/', httpOnly: true, maxAge: 1000 * 60 * 60 * 24, sameSite: 'strict', secure: true })
     } else {
       result.code = -1
       result.message = '您输入的用户或密码错误'

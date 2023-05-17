@@ -54,7 +54,7 @@ export const post: APIRoute = async(context) => {
     console.log(res)
     if (res.affectedRows) {
       const token = generateToken({ id: res.insertId, nickname: nick })
-      context.cookies.set('token', token, { path: '/', httpOnly: true, maxAge: 1000 * 60 * 60 * 12, sameSite: 'strict', secure: true })
+      context.cookies.set('token', token, { path: '/', httpOnly: true, maxAge: 1000 * 60 * 60 * 12, sameSite: 'strict' })
       result.code = 0
       result.message = '注册成功'
       result.data = { id: res.insertId, nickname: nick }

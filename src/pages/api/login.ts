@@ -24,7 +24,7 @@ export const post: APIRoute = async(context) => {
       const { id, email, nickname, period_time } = res[0]
       const token = generateToken({ id, nickname, period_time })
       result.data = { id, nickname, period_time }
-      context.cookies.set('token', token, { path: '/', httpOnly: true, maxAge: 1000 * 60 * 60 * 24, sameSite: 'strict', secure: true })
+      context.cookies.set('token', token, { path: '/', httpOnly: true, maxAge: 1000 * 60 * 60 * 24, sameSite: 'strict' })
     } else {
       result.code = -1
       result.message = '您输入的用户或密码错误'

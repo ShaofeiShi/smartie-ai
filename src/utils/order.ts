@@ -60,3 +60,12 @@ export async function updateOrder(order_no, payment_qr_code_url) {
     `
   return await queryDb(sql)
 }
+// 更新订单支付
+export async function updateOrderPay(order_no, alipay_trade_no, payment_amount) {
+  const sql = `
+        UPDATE orders
+        SET alipay_trade_no = ${alipay_trade_no},payment_amount = ${payment_amount},status = 1
+        WHERE order_no = ${order_no}
+    `
+  return await queryDb(sql)
+}

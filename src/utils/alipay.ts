@@ -89,7 +89,7 @@ export const checkAliPayOrder = async(orderNo) => {
     console.error(`error: ${validRes}`)
     return result
   }
-  if (aliRes && aliRes.alipay_trade_query_response && aliRes.alipay_trade_query_response.code === '10000') {
+  if (aliRes && aliRes.alipay_trade_query_response && aliRes.alipay_trade_query_response.code === '10000' && aliRes.alipay_trade_query_response.trade_status === 'TRADE_SUCCESS') {
     result = aliRes.alipay_trade_query_response
     // validRes = true
   } else {

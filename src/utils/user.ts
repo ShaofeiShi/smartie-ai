@@ -37,8 +37,17 @@ export async function addNewUser(user, nick, pass) {
   pass = escapeParam(pass)
 
   // const db = createDb()
-  const sql = `insert into users (email,password,nickname) values (${user} , SHA2(${pass}, 256),${nick} );`
+  const sql = `insert into users (email,password,nickname,period_time) values (${user} , SHA2(${pass}, 256),${nick}, DATE_ADD(NOW(), INTERVAL 3 DAY) );`
 
   const result = await queryDb(sql)
   return result
+}
+
+export async function updateUserPeriod(userId) {
+  const sql = `
+        UPDATE users
+        SET period_time = DATE_ADD(NOW(), INTERVAL 1 YEAR)
+        WHERE id = ${userId}
+    `
+  return await queryDb(sql)
 }

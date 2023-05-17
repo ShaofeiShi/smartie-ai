@@ -37,7 +37,7 @@ import Layout from '../layouts/Layout.astro';
         <img id="payQRCodeImg" src="" alt="请用支付宝扫码支付" width="300" />
         <span>打开支付宝，扫描二维码支付</span>
       </div>
-      
+
     </main>
   </Layout>
 
@@ -48,17 +48,33 @@ import Layout from '../layouts/Layout.astro';
     const qrImg = document.getElementById('payQRCodeImg')
     async function handleOrder() {
         const response = await fetch('/api/order', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: null,
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: null,
         })
         const responseJson = await response.json()
         console.log(responseJson)
-        qrImg.src=responseJson.data.qrCodeImg
-        qrBox.style.display = 'block'
-        tipsBox.style.display = 'none'
+        if (responseJson && responseJson.code === '0') {
+          qrImg.src=responseJson.data.qrCodeImg
+          qrBox.style.display = 'block'
+          tipsBox.style.display = 'none'
+          const orderNo = responseJson.data.orderNo
+          setInterval(async function(){
+              const payStatus = await fetch(`/api/checkOrder?orderNo=${orderNo}`,{
+                  method: 'GET',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: null,
+              })
+              if (payStatus && payStatus.code === '0') {
+                window.location.href = '/'
+              }
+            },1000*3)
+        }
+
     }
     handleOrder()
     // qrBox.style.display = 'block'

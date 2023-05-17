@@ -69,7 +69,9 @@ import Layout from '../layouts/Layout.astro';
                   },
                   body: null,
               })
-              if (payStatus && payStatus.code === '0') {
+              const orderStatus = await payStatus.json()
+              console.log(orderStatus)
+              if (orderStatus && orderStatus.code === '0') {
                 window.location.href = '/'
               }
             },1000*3)

@@ -13,10 +13,19 @@ export const config = {
     alipayPublicKey: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyEt1kDU1NHh8BTa59y2atyt9SJKimFuSv6Brm8HND6ArBorKJ45cpRRclDVqXQ0gabubyoKXgUem5dbhdETrjKfUMw1UERq/mmgq9Qc7FKhMX7y2fXgeAfp6PF76nRFDFR/zqsUL1fVF0X5eYCm4fJeafT2+BlIUhp5nI1d19WDCHOIAT6yHt8XR2YHVjx6+8f6s6w6H99MgDkf+nouGJhOjgCyt/10w+jBoqyhkYrMFPOsZhCKLRFDOp9L6WVCObpDWRC7HJ0P/xSt6uhw+Auv4g6/aDZy2pFhyWa7VxFFsKKgIRT/M2yXE60Nq6B3tPSuNTwifgokbAyYSMavWBQIDAQAB',
     gateway: 'https://openapi-sandbox.dl.alipaydev.com/gateway.do', // 沙箱网关
   },
-  dbConnect: {
+  testDbConnect: {
     host: 'mysql.sqlpub.com',
     user: 'edianyun',
     password: '7c126dd1f9edb592',
+    database: 'smartie',
+    connectTimeout: 1000,
+    connectionLimit: 10,
+    multipleStatements: true,
+  },
+  dbConnect: {
+    host: 'localhost',
+    user: 'smartieai',
+    password: 'Smartie!23',
     database: 'smartie',
     connectTimeout: 1000,
     connectionLimit: 10,

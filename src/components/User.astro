@@ -1,8 +1,6 @@
-
 <div id="themeToggle" class="absolute top-3 right-15 h-10 rounded-md transition-colors ">
   Hello,<span id="userNickName"></span>&nbsp;<a href="/api/logout" class="text-blue-500">Logout</a>
 </div>
-
 <script>
 async function checkCurrentAuth() {
   // const password = localStorage.getItem('pass')
@@ -14,10 +12,12 @@ async function checkCurrentAuth() {
   })
   const responseJson = await response.json()
 
-  if (responseJson.code === 0 && responseJson.data)
-    document.getElementById('userNickName').innerHTML = responseJson.data.nickname
-  else
-    window.location.href = '/login'
+  if (responseJson.code === 0 && responseJson.data) {
+      document.getElementById('userNickName').innerHTML = responseJson.data.nickname
+      //document.getElementById('mainBody').style.display = 'block'
+  } else {
+      window.location.href = '/login'
+  }
 
   // if (responseJson.code !== 0)
 

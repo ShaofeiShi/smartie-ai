@@ -29,14 +29,16 @@ import Layout from '../layouts/Layout.astro';
       ></svg
     >
     <span class="gpt-subtitle">小易智能<br /><br /><br /></span>
-    <div class="op-30">请在下方输入用户名和密码，没有账号？ <a href="/register">立即注册</a></div>
-    <div calss="w-96">
-      <div id="input_container" class="flex mt-4 w-full">
-        <div >用户名：<input id="username_input" type="text" placeholder="邮箱/昵称" class="gpt-password-input w-64" /></div>
+    <div >请在下方输入用户名和密码，没有账号？ <a href="/register" class="text-blue-400">立即注册</a></div>
+    <div class="w-100">
+      <div class="flex mt-4 w-full">
+        <span class="self-center w-1/5">用户名：</span>
+        <input id="username_input" type="text" placeholder="邮箱/昵称" class="gpt-password-input w-4/5" />
       </div>
-      <div id="input_container" class="flex mt-4 w-full">
-        <div>密　码：<input id="password_input" type="password" placeholder="8-20位大小写字母和数字" class="gpt-password-input" /></div>
-        <div id="submit" class="gpt-password-submit">
+      <div class="flex mt-4 w-full relative">
+        <span class="self-center w-1/5">密　码：</span>
+        <input id="password_input" type="password" placeholder="8-20位大小写字母和数字" class="gpt-password-input w-4/5" />
+        <div id="submit" class="gpt-password-submit absolute right-0 z-1">
           <div class="i-carbon-arrow-right"></div>
         </div>
       </div>

@@ -8,8 +8,11 @@ import { nanoid } from "nanoid"
 const require = createRequire(import.meta.url)
 const { Configuration, OpenAIApi } = require("openai")
 const fs = require("fs")
+
+const baseUrl = ((import.meta.env.OPENAI_API_BASE_URL) || 'https://api.openai.com').trim().replace(/\/$/, '')
 const configuration = new Configuration({
   apiKey: import.meta.env.OPENAI_API_KEY,
+  basePath: baseUrl + '/v1'
 })
 const openai = new OpenAIApi(configuration)
 

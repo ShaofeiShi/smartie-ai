@@ -31,6 +31,9 @@ export default defineConfig({
   output: 'server',
   adapter: envAdapter(),
   vite: {
+    server: {
+      host: '127.0.0.1'
+    },
     // server: {
     //   proxy: {
     //       "/api": {

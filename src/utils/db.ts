@@ -5,7 +5,7 @@ import { config } from '../../config'
 const require = createRequire(import.meta.url)
 const mysql = require('mysql2')
 
-const pool = mysql.createPool(config.dbConnect)
+const pool = mysql.createPool(config.testDbConnect)
 pool.on('error', (err) => {
   throw err
   return

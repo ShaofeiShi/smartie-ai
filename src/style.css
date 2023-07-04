@@ -1,0 +1,27 @@
+.gen-text-bar-ware {
+    position: fixed;
+    width: 180px;
+    height: 80px;
+    left: 50%;
+    top: 100px;
+    margin-left: -90px;
+    padding: 12px;
+    text-align: center;
+    color: #ffffff;
+    background-color: #059669e8;
+    border-radius: 18px;
+    font-size: 14px;
+}
+.gen-text-bar-list {
+    display: flex;
+    padding: 0px 20px;
+    margin-top: 10px;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.gen-text-bar-list i {
+    display: block;
+    background-color: #ffffff;
+    width: 3px;
+}

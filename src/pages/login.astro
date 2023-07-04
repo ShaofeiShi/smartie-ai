@@ -82,6 +82,8 @@ async function handleSubmit() {
         pass: password,
       }),
     })
+    
+    console.log(response, 'response')
     const responseJson = await response.json()
     if (responseJson.code === 0) {
     // localStorage.setItem('pass', password)

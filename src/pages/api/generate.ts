@@ -1,10 +1,16 @@
 // #vercel-disable-blocks
 import { ProxyAgent, fetch } from 'undici'
+import { createRequire } from "module"
 // #vercel-end
 import { generatePayload, parseOpenAIStream } from '@/utils/openAI'
 import { verifySignature } from '@/utils/auth'
 import { verifyToken } from '@/utils/jwt'
 import type { APIRoute } from 'astro'
+
+const require = createRequire(import.meta.url)
+const tiktoken = require('tiktoken-node')
+const enc = tiktoken.encodingForModel("gpt-3.5-turbo-16k")
+
 
 const apiKey = import.meta.env.OPENAI_API_KEY
 const httpsProxy = import.meta.env.HTTPS_PROXY
@@ -54,7 +60,17 @@ export const post: APIRoute = async(context) => {
       },
     }), { status: 401 })
   }
-  const initOptions = generatePayload(apiKey, messages)
+  // 最多 15 * 1024 个tikToken，多余的截取
+  let tikTokenLen = 0;
+  const messageCurrent = messages.reduceRight((arr, item) => {
+    if (tikTokenLen < 15 * 1024) { // 最多不能超过15 * 1024
+      const tikTokenResult = enc.encode(item.content || '')
+      arr.push(item)
+      tikTokenLen = tikTokenLen + tikTokenResult.length
+    }
+    return arr;
+  }, []).reverse()
+  const initOptions = generatePayload(apiKey, messageCurrent)
   // #vercel-disable-blocks
   if (httpsProxy)
     initOptions.dispatcher = new ProxyAgent(httpsProxy)

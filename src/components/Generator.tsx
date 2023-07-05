@@ -2,6 +2,7 @@ import { Index, Show, createSignal, lazy, onCleanup, onMount } from 'solid-js'
 import { useThrottleFn } from 'solidjs-use'
 import { generateSignature } from '@/utils/auth'
 import IconClear from './icons/Clear'
+import IconSend from './icons/Send'
 // import MessageItem from './MessageItem'
 import SystemRoleSettings from './SystemRoleSettings'
 import ErrorMessageItem from './ErrorMessageItem'
@@ -393,7 +394,7 @@ export default () => {
               />
           }
           <button onClick={handleButtonClick} disabled={systemRoleEditing()} gen-slate-btn>
-            OK
+            <IconSend></IconSend>
           </button>
           <button title="Clear" onClick={clear} disabled={systemRoleEditing()} gen-slate-btn>
             <IconClear />

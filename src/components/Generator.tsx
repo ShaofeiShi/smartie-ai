@@ -343,7 +343,7 @@ export default () => {
   }
 
   return (
-    <div my-6>
+    <div my-6 class="no-touch">
       <SystemRoleSettings
         canEdit={() => messageList().length === 0}
         systemRoleEditing={systemRoleEditing}

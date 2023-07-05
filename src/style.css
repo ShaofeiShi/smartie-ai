@@ -34,7 +34,7 @@
     user-select: none;
 }
 /*如果是禁用长按选择文字功能，用css*/  
-* {  
+html, body, * {  
     -webkit-touch-callout:none;  
     -webkit-user-select:none;  
     -khtml-user-select:none;  

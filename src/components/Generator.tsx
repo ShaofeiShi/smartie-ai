@@ -334,6 +334,8 @@ export default () => {
     touchX = e.targetTouches[0].screenX
     touchY = e.targetTouches[0].screenY
     speakStart()
+    e.preventDefault()
+    e.stopPropagation()
   }
   const onTouchMove = (e) => {
     const moveY = e.targetTouches[0].screenY

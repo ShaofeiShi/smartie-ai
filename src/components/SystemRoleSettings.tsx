@@ -28,7 +28,7 @@ export default (props: Props) => {
               <Show when={props.canEdit()} fallback={<IconEnv />}>
                 <span onClick={() => props.setCurrentSystemRoleSettings('')} class="sys-edit-btn p-1 rd-50%" > <IconX /> </span>
               </Show>
-              <span>Prompt: </span>
+              <span class="no-touch">Prompt: </span>
             </div>
             <div class="mt-1">
               {props.currentSystemRoleSettings()}
@@ -38,7 +38,7 @@ export default (props: Props) => {
         <Show when={!props.currentSystemRoleSettings() && props.canEdit()}>
           <span onClick={() => props.setSystemRoleEditing(!props.systemRoleEditing())} class="sys-edit-btn">
             <IconEnv />
-            <span>Prompt</span>
+            <span class="no-touch">Prompt</span>
           </span>
         </Show>
       </Show>
@@ -46,7 +46,7 @@ export default (props: Props) => {
         <div>
           <div class="fi gap-1 op-50 dark:op-60">
             <IconEnv />
-            <span>Prompt</span>
+            <span class="no-touch">Prompt</span>
           </div>
           <p class="my-2 leading-normal text-sm op-50 dark:op-60">提示助手如何思考，设定助手行为.如答案提示、任务提示、角色行为</p>
           <div>

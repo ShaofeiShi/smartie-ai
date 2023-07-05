@@ -21,6 +21,8 @@ enum SpeakState {
 }
 
 let rec = null; // 录音对象
+let touchX = 0;
+let touchY = 0;
 export default () => {
   let inputRef: HTMLTextAreaElement
   const [currentSystemRoleSettings, setCurrentSystemRoleSettings] = createSignal('')
@@ -46,10 +48,16 @@ export default () => {
     }
 
     window.addEventListener('beforeunload', handleBeforeUnload)
+    window.addEventListener('contextmenu', onContextMenu)
     onCleanup(() => {
       window.removeEventListener('beforeunload', handleBeforeUnload)
+      window.removeEventListener('contextmenu', onContextMenu)
     })
   })
+
+  const onContextMenu = (e) => {
+    e.preventDefault();
+  }
 
   const handleBeforeUnload = () => {
     localStorage.setItem('messageList', JSON.stringify(messageList()))
@@ -320,6 +328,19 @@ export default () => {
     }
   }
 
+  /** 移动端特殊处理 */
+  const onTouchStart = (e) => {
+    touchX = e.targetTouches[0].screenX
+    touchY = e.targetTouches[0].screenY
+    speakStart()
+  }
+  const onTouchMove = (e) => {
+    const moveY = e.targetTouches[0].screenY
+    if (touchY - moveY > 20 ) {
+      speakStop()
+    }
+  }
+
   return (
     <div my-6>
       <SystemRoleSettings
@@ -343,7 +364,15 @@ export default () => {
         <div class="gen-text-wrapper" class:op-50={systemRoleEditing()}>
           <img class="gen-text-speak" src={speakImg} onClick={toggleInputType}/>
           {
-            speakOn() ? <button class="gen-text-speak-but" style="-webkit-touch-callout:none;" onMouseDown={speakStart} onMouseUp={speakEnd} onMouseLeave={speakStop}>
+            speakOn() ? 
+            <button class="gen-text-speak-but no-touch"
+              style="user-select:none;"
+              onMouseDown={speakStart}
+              onTouchStart={onTouchStart}
+              onMouseUp={speakEnd}
+              onTouchEnd={speakEnd}
+              onMouseLeave={speakStop}
+              onTouchMove={onTouchMove}>
               {
                 speakState() === SpeakState.START ? '说话中' : '按住说话'
               }

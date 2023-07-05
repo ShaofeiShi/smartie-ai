@@ -41,4 +41,6 @@
     -moz-user-select:none;  
     -ms-user-select:none;  
     user-select:none;  
+    -moz-touch-callout:none;
+    -ms-touch-callout:none;
 } 

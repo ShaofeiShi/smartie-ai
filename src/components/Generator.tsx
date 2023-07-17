@@ -8,6 +8,7 @@ import SystemRoleSettings from './SystemRoleSettings'
 import ErrorMessageItem from './ErrorMessageItem'
 import type { ChatMessage, ErrorMessage } from '@/types'
 import speakImg from '../../public/speak.png';
+import closeImg from '../../public/close.png';
 
 import Recorder from 'recorder-core'
 //引入mp3格式支持文件；如果需要多个格式支持，把这些格式的编码引擎js文件放到后面统统引入进来即可
@@ -18,12 +19,11 @@ enum SpeakState {
   READY,
   START,
   SUCCESS,
+  STOPPING,
   STOP,
 }
 
 let rec = null; // 录音对象
-let touchX = 0;
-let touchY = 0;
 export default () => {
   let inputRef: HTMLTextAreaElement
   const [currentSystemRoleSettings, setCurrentSystemRoleSettings] = createSignal('')
@@ -322,26 +322,41 @@ export default () => {
       console.error('结束录音出错：'+err)
     })
   }
-  const speakStop = () => {
-    if (speakState() === SpeakState.START) {
-      rec.stop()
-      setSpeakState(SpeakState.STOP)
-    }
+  const onMouseCloseUp = () => {
+    rec.stop()
+    setSpeakState(SpeakState.STOP)
   }
 
   /** 移动端特殊处理 */
   const onTouchStart = (e) => {
-    touchX = e.targetTouches[0].screenX
-    touchY = e.targetTouches[0].screenY
     speakStart()
     e.preventDefault()
     e.stopPropagation()
   }
   const onTouchMove = (e) => {
-    const moveY = e.targetTouches[0].screenY
-    if (touchY - moveY > 20 ) {
-      speakStop()
+    if (checkInCloseContent(e)) {
+      console.log('STOPPING')
+      setSpeakState(SpeakState.STOPPING)
+    } else {
+      console.log('START')
+      setSpeakState(SpeakState.START)
     }
+  }
+  const onTouchEnd = (e) => {
+    debugger;
+    if (speakState() === SpeakState.START) {
+      speakEnd()
+    } else if (speakState() === SpeakState.STOPPING) { // 滑动到了关闭按钮区域
+      setSpeakState(SpeakState.READY)
+      rec.stop()
+    }
+  }
+
+  const checkInCloseContent = (e) => {
+    const closeContent = document.querySelector('.gen-text-wrapper-close')
+    const { offsetTop, offsetLeft, offsetWidth, offsetHeight } = closeContent
+    const { clientX, clientY } = e.targetTouches[0]
+    return clientX > offsetLeft && clientX < (offsetLeft + offsetWidth) && clientY > offsetTop && clientY < (offsetTop + offsetHeight)
   }
 
   return (
@@ -364,52 +379,66 @@ export default () => {
           </div>
         )}
       >
-        <div class="gen-text-wrapper" class:op-50={systemRoleEditing()}>
-          <img class="gen-text-speak" src={speakImg} onClick={toggleInputType}/>
-          {
-            speakOn() ? 
-            <button class="gen-text-speak-but no-touch"
-              style="user-select:none;"
-              onMouseDown={speakStart}
-              onTouchStart={onTouchStart}
-              onMouseUp={speakEnd}
-              onTouchEnd={speakEnd}
-              onMouseLeave={speakStop}
-              onTouchMove={onTouchMove}>
-              {
-                speakState() === SpeakState.START ? '说话中' : '按住说话'
-              }
-            </button> :
-              <textarea
-                ref={inputRef!}
-                disabled={systemRoleEditing()}
-                onKeyDown={handleKeydown}
-                placeholder="输入内容..."
-                autocomplete="off"
-                autofocus
-                onInput={() => {
-                  inputRef.style.height = 'auto'
-                  inputRef.style.height = `${inputRef.scrollHeight}px`
-                }}
-                rows="1"
-                class="gen-textarea"
-              />
-          }
-          <button onClick={handleButtonClick} disabled={systemRoleEditing()} gen-slate-btn>
-            <IconSend></IconSend>
-          </button>
-          <button title="Clear" onClick={clear} disabled={systemRoleEditing()} gen-slate-btn>
-            <IconClear />
-          </button>
+        <div class="gen-text-wrapper gen-text-w-center" class:op-50={systemRoleEditing()}>
+          <div class="gen-text-conent">
+            <img class="gen-text-speak" src={speakImg} onClick={toggleInputType}/>
+            {
+              speakOn() ? 
+              <button class="gen-text-speak-but no-touch"
+                onMouseDown={speakStart}
+                onMouseUp={speakEnd}
+                
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
+                >
+                {
+                  speakState() === SpeakState.START ? '说话中' : '按住说话'
+                }
+              </button> :
+                <textarea
+                  ref={inputRef!}
+                  disabled={systemRoleEditing()}
+                  onKeyDown={handleKeydown}
+                  placeholder="输入内容..."
+                  autocomplete="off"
+                  autofocus
+                  onInput={() => {
+                    inputRef.style.height = 'auto'
+                    inputRef.style.height = `${inputRef.scrollHeight}px`
+                  }}
+                  rows="1"
+                  class="gen-textarea"
+                />
+            }
+            <button onClick={handleButtonClick} disabled={systemRoleEditing()} gen-slate-btn>
+              <IconSend></IconSend>
+            </button>
+            <button title="Clear" onClick={clear} disabled={systemRoleEditing()} gen-slate-btn>
+              <IconClear />
+            </button>
+          </div>
         </div>
+        {
+          speakState() === SpeakState.START || speakState() === SpeakState.STOPPING ?
+          <div>
+            <div class="gen-speak-gray">
+            </div>
+            <div class="gen-text-wrapper-ing line-height-20 no-touch">
+              讲话中
+            </div>
+            <div class={`gen-text-wrapper-close gen-flex-center ${speakState() === SpeakState.STOPPING ? 'gen-text-wrapper-closeing' : ''}`} onMouseUp={onMouseCloseUp}>
+              <img class="gen-text-close-icon" src={closeImg}/>
+            </div>
+          </div> : null
+        }
       </Show>
       {
-        speakState() === SpeakState.START ? <div class="gen-text-bar-ware">
-          移走取消
+        speakState() === SpeakState.START || speakState() === SpeakState.STOPPING  ? <div class="gen-text-bar-ware">
           <div class="gen-text-bar-list">
             {
               speakWareList().map((height) => {
-                return <i style={{'height': height + 'px'}}></i>
+                return <i style={{'height': (height / 10) + 'rem'}}></i>
               })
             }
           </div>

@@ -46,6 +46,9 @@
 .gen-text-bar-arrow-2 {
     border-top-color: rgb(231, 93, 88);
 }
+.dark .gen-text-wrapper {
+    background-color: #212129;
+}
 .gen-text-wrapper-ing-bc {
     background-image: linear-gradient(to bottom, rgb(160, 160, 160), rgb(216, 216, 216));
 }

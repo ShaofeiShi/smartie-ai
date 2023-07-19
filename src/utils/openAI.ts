@@ -3,6 +3,7 @@ import type { ParsedEvent, ReconnectInterval } from 'eventsource-parser'
 import type { ChatMessage } from '@/types'
 
 const model = import.meta.env.OPENAI_API_MODEL || 'gpt-3.5-turbo'
+const model4 = import.meta.env.OPENAI_API_MODEL_4 || 'gpt-4-0613'
 
 export const generatePayload = (apiKey: string, messages: ChatMessage[]): RequestInit & { dispatcher?: any } => ({
   headers: {

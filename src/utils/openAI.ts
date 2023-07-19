@@ -5,19 +5,22 @@ import type { ChatMessage } from '@/types'
 const model = import.meta.env.OPENAI_API_MODEL || 'gpt-3.5-turbo'
 const model4 = import.meta.env.OPENAI_API_MODEL_4 || 'gpt-4-0613'
 
-export const generatePayload = (apiKey: string, messages: ChatMessage[]): RequestInit & { dispatcher?: any } => ({
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${apiKey}`,
-  },
-  method: 'POST',
-  body: JSON.stringify({
-    model,
-    messages,
-    temperature: 0.6,
-    stream: true,
-  }),
-})
+export const generatePayload = (apiKey: string, messages: ChatMessage[], modelType: string): RequestInit & { dispatcher?: any } => {
+  const selectModel = modelType === '4.0' ? model4 : model
+  return {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      model: selectModel,
+      messages,
+      temperature: 0.6,
+      stream: true,
+    }),
+  }
+}
 
 export const parseOpenAIStream = (rawResponse: Response) => {
   const encoder = new TextEncoder()

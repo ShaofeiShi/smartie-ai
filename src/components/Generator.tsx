@@ -93,11 +93,13 @@ export default () => {
           content: currentSystemRoleSettings(),
         })
       }
+      debugger;
       const timestamp = Date.now()
       const response = await fetch('/api/generate', {
         method: 'POST',
         body: JSON.stringify({
           messages: requestMessageList,
+          modelType: localStorage.getItem('gpt-model') || '3.5',
           time: timestamp,
           pass: storagePassword,
           sign: await generateSignature({

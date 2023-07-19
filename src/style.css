@@ -1,3 +1,9 @@
+.gpt-select-model {
+    margin-bottom: 1rem;
+}
+.dark .gpt-select-model {
+    background-color: #212129;
+}
 .gen-text-bar-ware {
     position: fixed;
     width: 12rem;

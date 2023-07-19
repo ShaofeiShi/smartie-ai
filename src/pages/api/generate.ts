@@ -20,7 +20,7 @@ const baseUrl = ((import.meta.env.OPENAI_API_BASE_URL) || 'https://api.openai.co
 export const post: APIRoute = async(context) => {
   const body = await context.request.json()
   const token = context.cookies.get('token').value
-  const { sign, time, messages } = body
+  const { sign, time, messages, modelType } = body
   if (!messages) {
     return new Response(JSON.stringify({
       error: {
@@ -70,7 +70,7 @@ export const post: APIRoute = async(context) => {
     }
     return arr;
   }, []).reverse()
-  const initOptions = generatePayload(apiKey, messageCurrent)
+  const initOptions = generatePayload(apiKey, messageCurrent, modelType)
   // #vercel-disable-blocks
   if (httpsProxy)
     initOptions.dispatcher = new ProxyAgent(httpsProxy)

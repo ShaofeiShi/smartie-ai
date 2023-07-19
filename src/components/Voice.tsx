@@ -23,7 +23,7 @@ let rec = null; // 录音对象
 const defaultVoiceLines = [3, 5, 3, 4, 6, 12, 6, 4, 3, 5, 3, 5, 3, 4, 6, 11, 9, 7, 5]
 export default ({speakOn, sendVoiceMessage}: Props) => {
   let inputRef: HTMLTextAreaElement
-  const [speakState, setSpeakState] = createSignal<SpeakState>(SpeakState.READY) // 语音全程状态 start, end, stop
+  const [speakState, setSpeakState] = createSignal<SpeakState>(SpeakState.TRANSLATED) // 语音全程状态 start, end, stop
   const [speakWareList, setSpeakWareList] = createSignal([...defaultVoiceLines]) // 是否语音模式
 
   if (!rec && speakOn) {

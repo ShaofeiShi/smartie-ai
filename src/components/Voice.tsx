@@ -27,7 +27,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
   const [speakState, setSpeakState] = createSignal<SpeakState>(SpeakState.READY) // 语音全程状态 start, end, stop
   const [speakWareList, setSpeakWareList] = createSignal([...defaultVoiceLines]) // 是否语音模式
 
-  if (speakOn) {
+  const initSpeak = () => {
     Recorder.ConnectEnableWorklet = true
     rec = Recorder({
       type: 'mp3' //录音格式，可以换成wav等其他格式
@@ -47,6 +47,9 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
       setUserAllow(false)
       console.log(msg)
     })
+  }
+  if (speakOn) {
+    initSpeak()
   };
 
   onMount(() => {
@@ -128,6 +131,11 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
       callback && callback('')
     })
   }
+  const onSpeakClick = () => {
+    if (!userAllow()) {
+      initSpeak()
+    }
+  }
   const onMouseCloseUp = () => {
     rec.stop()
     setSpeakState(SpeakState.STOP)
@@ -194,6 +202,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
+          onClick={onSpeakClick}
           >
           {
             !userAllow() ? '请先语音授权' : '按住说话'

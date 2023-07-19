@@ -152,8 +152,8 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
   }
   const onTouchEnd = (e) => {
     if (speakState() === SpeakState.START) {
+      setSpeakState(SpeakState.SUCCESS)
       speakEnd((text) => {
-        setSpeakState(SpeakState.SUCCESS)
         sendVoiceMessage(text)
       })
     } else if (speakState() === SpeakState.STOPPING) { // 滑动到了关闭按钮区域
@@ -264,7 +264,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
               <div class="gen-text-bar-list">
                 {
                   speakWareList().map((height) => {
-                    return <i style={{'height': (height / 10) + 'rem'}}></i>
+                    return <i style={{'height': (height / 5) + 'rem'}}></i>
                   })
                 }
               </div>

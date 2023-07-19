@@ -49,6 +49,16 @@
 .gen-text-wrapper-ing-bc {
     background-image: linear-gradient(to bottom, rgb(160, 160, 160), rgb(216, 216, 216));
 }
+.gen-text-wrapper-ing span{
+    position: absolute;
+    top: -2rem;
+    height: 1rem;
+    line-height: 1rem;
+    width: 4rem;
+    display: inline-block;
+    left: 50%;
+    margin-left: -2rem;
+}
 .gen-speak-gray-bc {
     background-image: linear-gradient(to bottom, rgb(151, 151, 151), rgb(77, 77, 77));
 }
@@ -74,7 +84,7 @@
     position: absolute;
     top: -2rem;
     color: rgb(216, 216, 216);
-    transform:rotate(9deg);
+    transform:rotate(9deg);                               
     left: 1.6rem;
 }
 .gen-text-text-icon {

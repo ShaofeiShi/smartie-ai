@@ -206,7 +206,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
             {
               [SpeakState.TRANSLATED].includes(speakState()) ? null : 
               <div class="gen-text-wrapper-ing line-height-20 no-touch gen-text-wrapper-ing-bc">
-                <span class="no-touch">松开&nbsp;发送</span>
+                {/* <span class="no-touch">松开&nbsp;发送</span> */}
               </div>
             }
             {

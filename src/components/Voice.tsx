@@ -274,7 +274,7 @@ export default ({speakOn, sendVoiceMessage, setLoading}: Props) => {
                   autofocus
                   onInput={() => {
                     inputRef.style.height = 'auto'
-                    inputRef.style.height = `${inputRef.scrollHeight}px`
+                    inputRef.style.height = `${Math.min(80, inputRef.scrollHeight) }px`
                   }}
                   rows="1"
                   class="gen-textarea"

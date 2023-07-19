@@ -29,7 +29,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
 
   const initSpeak = () => {
     Recorder.ConnectEnableWorklet = true
-    if (rec) rec.Destroy()
+    Recorder.Destroy()
     rec = Recorder({
       type: 'mp3' //录音格式，可以换成wav等其他格式
       ,sampleRate: 16000 //录音的采样率，越大细节越丰富越细腻

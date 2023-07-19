@@ -6,6 +6,7 @@ import IconSend from './icons/Send'
 // import MessageItem from './MessageItem'
 import SystemRoleSettings from './SystemRoleSettings'
 import ErrorMessageItem from './ErrorMessageItem'
+import Voice from './Voice'
 import type { ChatMessage, ErrorMessage } from '@/types'
 import speakImg from '../../public/speak.png';
 import closeImg from '../../public/close.png';
@@ -15,15 +16,6 @@ import Recorder from 'recorder-core'
 import 'recorder-core/src/engine/mp3'
 import 'recorder-core/src/engine/mp3-engine'
 
-enum SpeakState {
-  READY,
-  START,
-  SUCCESS,
-  STOPPING,
-  STOP,
-}
-
-let rec = null; // 录音对象
 export default () => {
   let inputRef: HTMLTextAreaElement
   const [currentSystemRoleSettings, setCurrentSystemRoleSettings] = createSignal('')
@@ -34,8 +26,6 @@ export default () => {
   const [loading, setLoading] = createSignal(false)
   const [controller, setController] = createSignal<AbortController>(null)
   const [speakOn, setSpeakOn] = createSignal<boolean>(false) // 是否语音模式
-  const [speakState, setSpeakState] = createSignal<SpeakState>(SpeakState.READY) // 语音全程状态 start, end, stop
-  const [speakWareList, setSpeakWareList] = createSignal(Array(10).fill(10)) // 是否语音模式
 
   onMount(() => {
     try {
@@ -229,136 +219,20 @@ export default () => {
             </div>)
   }
 
-  // blob 转 File
-  const blobToFile = (blob, fileName) => {
-    return new File([blob], fileName, {
-      type: blob.type,
-      lastModified: Date.now(),
-    })
-  };
-  // File 转 base64
-  const fileToBase64Async = (file) => {
-    return new Promise((resolve, reject) => {
-      let reader = new FileReader();
-      reader.readAsDataURL(file)
-      reader.onload = (e) => {
-        resolve(e.target.result)
-      }
-    })
-  }
-  // 转化语音为文字 base64
-  const changeAudioToText = async (blob) => {
-    const base64 = await fileToBase64Async(blobToFile(blob, `base.mp3`));
-    console.log(base64, 'base64')
-    const response = await fetch('/api/audioTranscribe', {
-      method: 'POST',
-      body: JSON.stringify({
-        audioFile: base64
-      }),
-    })
-    const responseJson = await response.json()
-    if (responseJson.code === 0) {
-      setMessageList([
-        ...messageList(),
-        {
-          role: 'user',
-          content: responseJson.data.text,
-        },
-      ])
-      requestWithLatestMessage()
-    } else {
-      console.error(responseJson.message)
-      setCurrentError(responseJson.message)
-      throw new Error('Request failed')
-    }
-  }
-
   const toggleInputType = () => {
-    if (!speakOn() && rec === null) {
-      Recorder.ConnectEnableWorklet = true
-      rec = Recorder({
-        type: 'mp3' //录音格式，可以换成wav等其他格式
-        ,sampleRate: 16000 //录音的采样率，越大细节越丰富越细腻
-        ,bitRate: 16 //录音的比特率，越大音质越好
-        ,onProcess:(buffers, powerLevel) => {
-          //可实时绘制波形，实时上传（发送）数据
-          setSpeakWareList(Array(10).fill(10).map((height, index) => {
-            const randNum =  Math.random()
-            return height + (Math.min(powerLevel, 100) * randNum / 5)
-          }))
-        }
-      })
-      rec.open(() => { //打开麦克风授权获得相关资源
-        console.log('已经打开麦克风')
-      }, (msg, isUserNotAllow) => { //用户拒绝未授权或不支持
-        console.log(msg)
-      })
-    }
     setSpeakOn(!speakOn())
   }
 
-  const speakStart = () => {
-    setSpeakState(SpeakState.START)
-    if (!rec) {
-      console.error('未打开录音')
-      return
-    }
-	  rec.start()
-	  console.log('已开始录音')
+  const sendVoiceMessage = (text) => {
+    setMessageList([
+      ...messageList(),
+      {
+        role: 'user',
+        content: text,
+      },
+    ])
+    requestWithLatestMessage()
   }
-  const speakEnd = () => {
-    setSpeakState(SpeakState.SUCCESS)
-    if (!rec) {
-      console.error('未打开录音')
-      return
-    }
-    rec.stop((blob, duration) => {
-      //简单利用URL生成本地文件地址，此地址只能本地使用，比如赋值给audio.src进行播放，赋值给a.href然后a.click()进行下载（a需提供download="xxx.mp3"属性）
-      var localUrl=(window.URL||webkitURL).createObjectURL(blob)
-      console.log('录音成功', blob,localUrl, '时长:' + duration + 'ms')
-      
-      changeAudioToText(blob);
-    }, (err) => {
-      console.error('结束录音出错：'+err)
-    })
-  }
-  const onMouseCloseUp = () => {
-    rec.stop()
-    setSpeakState(SpeakState.STOP)
-  }
-
-  /** 移动端特殊处理 */
-  const onTouchStart = (e) => {
-    speakStart()
-    e.preventDefault()
-    e.stopPropagation()
-  }
-  const onTouchMove = (e) => {
-    if (checkInCloseContent(e)) {
-      console.log('STOPPING')
-      setSpeakState(SpeakState.STOPPING)
-    } else {
-      console.log('START')
-      setSpeakState(SpeakState.START)
-    }
-  }
-  const onTouchEnd = (e) => {
-    debugger;
-    if (speakState() === SpeakState.START) {
-      speakEnd()
-    } else if (speakState() === SpeakState.STOPPING) { // 滑动到了关闭按钮区域
-      setSpeakState(SpeakState.READY)
-      rec.stop()
-    }
-  }
-
-  const checkInCloseContent = (e) => {
-    const closeContent = document.querySelector('.gen-text-wrapper-close')
-    const { offsetTop, offsetLeft, offsetWidth, offsetHeight } = closeContent
-    const { clientX, clientY } = e.targetTouches[0]
-    return clientX > offsetLeft && clientX < (offsetLeft + offsetWidth) && clientY > offsetTop && clientY < (offsetTop + offsetHeight)
-  }
-
   return (
     <div my-6 class="no-touch">
       <SystemRoleSettings
@@ -380,22 +254,12 @@ export default () => {
         )}
       >
         <div class="gen-text-wrapper gen-text-w-center" class:op-50={systemRoleEditing()}>
-          <div class="gen-text-conent">
+          <div class="gen-text-conent" style="margin: 0 auto">
             <img class="gen-text-speak" src={speakImg} onClick={toggleInputType}/>
             {
               speakOn() ? 
-              <button class="gen-text-speak-but no-touch"
-                onMouseDown={speakStart}
-                onMouseUp={speakEnd}
-                
-                onTouchStart={onTouchStart}
-                onTouchMove={onTouchMove}
-                onTouchEnd={onTouchEnd}
-                >
-                {
-                  speakState() === SpeakState.START ? '说话中' : '按住说话'
-                }
-              </button> :
+              <Voice speakOn={speakOn()} sendVoiceMessage={sendVoiceMessage}></Voice>
+              :
                 <textarea
                   ref={inputRef!}
                   disabled={systemRoleEditing()}
@@ -419,31 +283,7 @@ export default () => {
             </button>
           </div>
         </div>
-        {
-          speakState() === SpeakState.START || speakState() === SpeakState.STOPPING ?
-          <div>
-            <div class="gen-speak-gray">
-            </div>
-            <div class="gen-text-wrapper-ing line-height-20 no-touch">
-              讲话中
-            </div>
-            <div class={`gen-text-wrapper-close gen-flex-center ${speakState() === SpeakState.STOPPING ? 'gen-text-wrapper-closeing' : ''}`} onMouseUp={onMouseCloseUp}>
-              <img class="gen-text-close-icon" src={closeImg}/>
-            </div>
-          </div> : null
-        }
       </Show>
-      {
-        speakState() === SpeakState.START || speakState() === SpeakState.STOPPING  ? <div class="gen-text-bar-ware">
-          <div class="gen-text-bar-list">
-            {
-              speakWareList().map((height) => {
-                return <i style={{'height': (height / 10) + 'rem'}}></i>
-              })
-            }
-          </div>
-        </div> : null
-      }
     </div>
   )
 }

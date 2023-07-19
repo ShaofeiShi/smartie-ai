@@ -18,18 +18,22 @@ import User from './User.astro'
   </div>
   <div class="fi mt-2">
     <span class="gpt-subtitle no-touch">小易智能</span>
-    <p px-1 mt-2 text-s op-45 class="no-touch">based on gpt-3.5-turbo</p>
+    <p px-1 mt-2 text-s op-45 class="no-touch" id="modelType">based on ChatGPT3.5</p>
   </div>
 </header>
 <script>
   const selectModel = document.getElementById('gpt-select-model') as HTMLSelectElement
+  const modelType = document.getElementById('modelType') as HTMLElement
   const cacheModelValue = localStorage.getItem('gpt-model')
   if (cacheModelValue) {
     selectModel.value = cacheModelValue
+    modelType.innerHTML = `based on ChatGPT${cacheModelValue}`
   }
 
   const handleToggleClick = (e) => {
-    localStorage.setItem('gpt-model', e.target.value)
+    const type = e.target.value
+    modelType.innerHTML = `based on ChatGPT${type}`
+    localStorage.setItem('gpt-model', type)
   }
   selectModel.addEventListener('change', handleToggleClick)
   </script>

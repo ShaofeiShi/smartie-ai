@@ -28,7 +28,6 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
   const [speakWareList, setSpeakWareList] = createSignal([...defaultVoiceLines]) // 是否语音模式
 
   const initSpeak = () => {
-    alert(3)
     Recorder.ConnectEnableWorklet = true
     rec = Recorder({
       type: 'mp3' //录音格式，可以换成wav等其他格式
@@ -48,6 +47,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
       setUserAllow(true)
     }, (msg, isUserNotAllow) => { //用户拒绝未授权或不支持
       alert(2)
+      rec = null
       setUserAllow(false)
       console.log(msg)
     })

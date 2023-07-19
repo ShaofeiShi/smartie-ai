@@ -43,11 +43,8 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
     })
     rec.open(() => { //打开麦克风授权获得相关资源
       console.log('已经打开麦克风')
-      alert(1)
       setUserAllow(true)
     }, (msg, isUserNotAllow) => { //用户拒绝未授权或不支持
-      alert(2)
-      rec = null
       setUserAllow(false)
       console.log(msg)
     })
@@ -209,7 +206,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
           onClick={onSpeakClick}
           >
           {
-            !userAllow() ? '请先语音授权' : '按住说话'
+            !userAllow() ? '请刷新页面授权' : '按住说话'
           }
         </button>
         {

@@ -26,7 +26,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
   const [speakState, setSpeakState] = createSignal<SpeakState>(SpeakState.READY) // 语音全程状态 start, end, stop
   const [speakWareList, setSpeakWareList] = createSignal([...defaultVoiceLines]) // 是否语音模式
 
-  if (!rec && speakOn) {
+  if (speakOn) {
     Recorder.ConnectEnableWorklet = true
     rec = Recorder({
       type: 'mp3' //录音格式，可以换成wav等其他格式
@@ -50,6 +50,8 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
   onMount(() => {
     window.addEventListener('contextmenu', onContextMenu)
     onCleanup(() => {
+      rec.stop()
+      rec = null
       window.removeEventListener('contextmenu', onContextMenu)
     })
   })

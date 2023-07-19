@@ -23,6 +23,7 @@ let rec = null; // 录音对象
 const defaultVoiceLines = [3, 5, 3, 4, 6, 12, 6, 4, 3, 5, 3, 5, 3, 4, 6, 11, 9, 7, 5]
 export default ({speakOn, sendVoiceMessage}: Props) => {
   let inputRef: HTMLTextAreaElement
+  const [userAllow, setUserAllow] = createSignal<boolean>(true)
   const [speakState, setSpeakState] = createSignal<SpeakState>(SpeakState.READY) // 语音全程状态 start, end, stop
   const [speakWareList, setSpeakWareList] = createSignal([...defaultVoiceLines]) // 是否语音模式
 
@@ -43,6 +44,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
     rec.open(() => { //打开麦克风授权获得相关资源
       console.log('已经打开麦克风')
     }, (msg, isUserNotAllow) => { //用户拒绝未授权或不支持
+      setUserAllow(false)
       console.log(msg)
     })
   };
@@ -100,6 +102,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
   }
 
   const speakStart = () => {
+    if (!userAllow()) return;
     setSpeakState(SpeakState.START)
     if (!rec) {
       console.error('未打开录音')
@@ -109,6 +112,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
 	  console.log('已开始录音')
   }
   const speakEnd = (callback) => {
+    if (!userAllow()) return;
     if (!rec) {
       console.error('未打开录音')
       return
@@ -192,7 +196,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
           onTouchEnd={onTouchEnd}
           >
           {
-            speakState() === SpeakState.START ? '说话中' : '按住说话'
+            !userAllow() ? '请先语音授权' : '按住说话'
           }
         </button>
         {

@@ -85,7 +85,7 @@ export default ({speakOn, sendVoiceMessage, setLoading}: Props) => {
   }
   // 转化语音为文字 base64
   const changeAudioToText = async (blob, callback) => {
-    setLoading(true)
+    if (speakState() !== SpeakState.TRANSLATING) setLoading(true)
     const base64 = await fileToBase64Async(blobToFile(blob, `base.mp3`))
     console.log(base64, 'base64')
     const response = await fetch('/api/audioTranscribe', {
@@ -96,7 +96,7 @@ export default ({speakOn, sendVoiceMessage, setLoading}: Props) => {
     })
     const responseJson = await response.json()
     console.log(responseJson.data.text)
-    setLoading(false)
+    if (speakState() !== SpeakState.TRANSLATING) setLoading(false)
     if (responseJson.code === 0) {
       callback && callback(responseJson.data.text)
       

@@ -206,18 +206,18 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
             {
               [SpeakState.TRANSLATED].includes(speakState()) ? null : 
               <div class="gen-text-wrapper-ing line-height-20 no-touch gen-text-wrapper-ing-bc">
-                <span>松开&nbsp;发送</span>
+                <span class="no-touch">松开&nbsp;发送</span>
               </div>
             }
             {
               [SpeakState.TRANSLATED].includes(speakState()) ? 
               <div class="gen-text-wrapper-cancle" onClick={closeVoiceState}>
                 <img src={cancelImg} />
-                <span>取消</span>
+                <span class="no-touch">取消</span>
               </div> : 
               <div class={`gen-text-wrapper-close gen-text-wrapper-close-bc gen-flex-center ${speakState() === SpeakState.STOPPING ? 'gen-text-wrapper-closing' : 'gen-text-wrapper-bc'}`} onMouseUp={onMouseCloseUp}>
                 <img class="gen-text-close-icon" src={closeImg}/>
-                <span>松开&nbsp;取消</span>
+                <span class="no-touch">松开&nbsp;取消</span>
               </div>
             }
             {
@@ -233,7 +233,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
                 :
                 <span class="gen-text-text-icon">文</span>
               }
-              <span class="tips">转文字</span>
+              <span class="tips no-touch">转文字</span>
             </div>
             }
             

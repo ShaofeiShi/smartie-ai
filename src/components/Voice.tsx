@@ -29,7 +29,6 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
 
   const initSpeak = () => {
     Recorder.ConnectEnableWorklet = true
-    Recorder.Destroy()
     rec = Recorder({
       type: 'mp3' //录音格式，可以换成wav等其他格式
       ,sampleRate: 16000 //录音的采样率，越大细节越丰富越细腻
@@ -135,6 +134,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
   }
   const onSpeakClick = () => {
     if (!userAllow()) {
+      Recorder.Destroy()
       initSpeak()
     }
   }

@@ -43,6 +43,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
     })
     rec.open(() => { //打开麦克风授权获得相关资源
       console.log('已经打开麦克风')
+      setUserAllow(true)
     }, (msg, isUserNotAllow) => { //用户拒绝未授权或不支持
       setUserAllow(false)
       console.log(msg)

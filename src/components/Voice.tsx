@@ -21,7 +21,7 @@ enum SpeakState {
 
 let rec = null; // 录音对象
 const defaultVoiceLines = [3, 5, 3, 4, 6, 12, 6, 4, 3, 5, 3, 5, 3, 4, 6, 11, 9, 7, 5]
-export default ({speakOn, sendVoiceMessage}: Props) => {
+export default ({speakOn, sendVoiceMessage, setLoading}: Props) => {
   let inputRef: HTMLTextAreaElement
   const [userAllow, setUserAllow] = createSignal<boolean>(false)
   const [speakState, setSpeakState] = createSignal<SpeakState>(SpeakState.READY) // 语音全程状态 start, end, stop
@@ -85,6 +85,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
   }
   // 转化语音为文字 base64
   const changeAudioToText = async (blob, callback) => {
+    setLoading(true)
     const base64 = await fileToBase64Async(blobToFile(blob, `base.mp3`))
     console.log(base64, 'base64')
     const response = await fetch('/api/audioTranscribe', {
@@ -95,6 +96,7 @@ export default ({speakOn, sendVoiceMessage}: Props) => {
     })
     const responseJson = await response.json()
     console.log(responseJson.data.text)
+    setLoading(false)
     if (responseJson.code === 0) {
       callback && callback(responseJson.data.text)
       

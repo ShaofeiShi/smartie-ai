@@ -44,7 +44,7 @@ export default defineConfig({
     //   },
     // },
     ssr: {
-      noExternal: ['path-to-regexp'],
+      noExternal: ['path-to-regexp', 'Recorder'],
     },
     build: {
       rollupOptions: {

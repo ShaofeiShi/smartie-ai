@@ -102,7 +102,6 @@ export default ({speakOn, sendVoiceMessage, setLoading}: Props) => {
       
     } else {
       console.error(responseJson.message)
-      setCurrentError(responseJson.message)
       throw new Error('Request failed')
     }
   }

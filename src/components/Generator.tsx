@@ -260,7 +260,7 @@ export default () => {
             <img class="gen-text-speak" src={speakImg} onClick={toggleInputType}/>
             {
               speakOn() ? 
-              <Voice speakOn={speakOn()} sendVoiceMessage={sendVoiceMessage} setLoading={setLoading}></Voice>
+              <Voice client:only={'solid-js'} speakOn={speakOn()} sendVoiceMessage={sendVoiceMessage} setLoading={setLoading}></Voice>
               :
                 <textarea
                   ref={inputRef!}

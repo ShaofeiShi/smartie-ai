@@ -75,7 +75,7 @@ export default defineConfig({
         registerType: 'autoUpdate',
         manifest: {
           name: '小易智能',
-          short_name: 'ChatGPT 3.5',
+          short_name: 'Smartie AI',
           description: 'A Robot based on OpenAI API',
           theme_color: '#212129',
           background_color: '#ffffff',

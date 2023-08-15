@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -113,7 +113,7 @@ devDependencies:
     specifier: ^2.3.0
     version: 2.3.0
   unocss:
-    specifier: ^0.50.1
+    specifier: ^0.50.4
     version: 0.50.4(postcss@8.4.21)(rollup@2.79.1)(vite@4.1.4)
   vite-plugin-compression:
     specifier: ^0.5.1

@@ -38,6 +38,7 @@
     "recorder-core": "^1.2.23062900",
     "solid-js": "1.6.12",
     "solidjs-use": "^1.2.0",
+    "tencentcloud-sdk-nodejs-asr": "^4.0.665",
     "tiktoken-node": "^0.0.6",
     "undici": "^5.20.0"
   },

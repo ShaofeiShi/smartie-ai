@@ -37,10 +37,8 @@ export const config = {
   },
   txVoiceConfig: {
     credential: {
-      // secretId: "AKIDc4JxXv63lHahcKp8E7oIZeV7WhAPRFo8",
-      // secretKey: "93WotmTLQHub6QYTCk7HEzYu41lIdljU",
-      secretId: "AKIDgCYgbKvKC1hEpNwR0c8Sds8OVfhYDj5G",
-      secretKey: "IpFUgfPvENrTzLnD7DJG50oOk1HVXTEn",
+      secretId: import.meta.env.TX_SECRET_ID,
+      secretKey: import.meta.env.TX_SECRET_KEY,
     },
     region: "",
     profile: {

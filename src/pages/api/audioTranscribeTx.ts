@@ -4,24 +4,14 @@
 import { createRequire } from "module"
 import type { APIRoute } from "astro"
 import { nanoid } from "nanoid"
+import { config } from '../../../config'
 
 const require = createRequire(import.meta.url)
 const tencentcloud = require("tencentcloud-sdk-nodejs-asr");
 const AsrClient = tencentcloud.asr.v20190614.Client;
 const fs = require("fs")
 
-const clientConfig = {
-  credential: {
-    secretId: "AKIDc4JxXv63lHahcKp8E7oIZeV7WhAPRFo8",
-    secretKey: "93WotmTLQHub6QYTCk7HEzYu41lIdljU",
-  },
-  region: "",
-  profile: {
-    httpProfile: {
-      endpoint: "asr.tencentcloudapi.com",
-    },
-  },
-};
+const clientConfig = config.txVoiceConfig
 
 
 export const post: APIRoute = async (context) => {
@@ -30,7 +20,7 @@ export const post: APIRoute = async (context) => {
   const { audioFile } = body
   
   // 实例化要请求产品的client对象,clientProfile是可选的
-  const client = new AsrClient(clientConfig);
+  const client = new AsrClient(clientConfig)
   const base64Data = audioFile.replace(/^data:audio\/\w+;base64,/, "")
   const params = {
     EngSerViceType: '16k_zh',

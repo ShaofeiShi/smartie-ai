@@ -35,4 +35,18 @@ export const config = {
     amount: 30.00,
     period: 365,
   },
+  txVoiceConfig: {
+    credential: {
+      // secretId: "AKIDc4JxXv63lHahcKp8E7oIZeV7WhAPRFo8",
+      // secretKey: "93WotmTLQHub6QYTCk7HEzYu41lIdljU",
+      secretId: "AKIDgCYgbKvKC1hEpNwR0c8Sds8OVfhYDj5G",
+      secretKey: "IpFUgfPvENrTzLnD7DJG50oOk1HVXTEn",
+    },
+    region: "",
+    profile: {
+      httpProfile: {
+        endpoint: "asr.tencentcloudapi.com",
+      },
+    },
+  }
 }

@@ -88,7 +88,7 @@ export default ({speakOn, sendVoiceMessage, setLoading}: Props) => {
     if (speakState() !== SpeakState.TRANSLATING) setLoading(true)
     const base64 = await fileToBase64Async(blobToFile(blob, `base.mp3`))
     console.log(base64, 'base64')
-    const response = await fetch('/api/audioTranscribe', {
+    const response = await fetch('/api/audioTranscribeTx', {
       method: 'POST',
       body: JSON.stringify({
         audioFile: base64

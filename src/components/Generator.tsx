@@ -93,7 +93,6 @@ export default () => {
           content: currentSystemRoleSettings(),
         })
       }
-      debugger;
       const timestamp = Date.now()
       const response = await fetch('/api/generate', {
         method: 'POST',

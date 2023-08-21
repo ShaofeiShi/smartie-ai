@@ -235,7 +235,7 @@ export default () => {
     requestWithLatestMessage()
   }
   return (
-    <div my-6 class="no-touch">
+    <div my-6>
       <SystemRoleSettings
         canEdit={() => messageList().length === 0}
         systemRoleEditing={systemRoleEditing}

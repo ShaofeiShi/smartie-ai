@@ -52,7 +52,7 @@ export default defineConfig({
     'gen-text-conent': 'max-w-[700px] fc gap-2',
     'gen-textarea': 'w-full px-3 py-3 min-h-12 max-h-36 rounded-sm bg-(slate op-15) resize-none base-focus placeholder:op-50 dark:(placeholder:op-30) scroll-pa-8px',
     'gen-text-speak-but': 'w-full touch-none select-none w-full px-3 py-3 min-h-12 max-h-36 rounded-sm resize-none base-focus placeholder:op-50 scroll-pa-8px cursor-pointer border border-(slate op-15) text-center',
-    'gen-text-wrapper-ing': 'fixed z-99 w-full h-26 bg-[#f1f1f1] bottom-[0] left-[0] b-rd-t-80% text-center line-height-20 text-3',
+    'gen-text-wrapper-ing': 'fixed z-99 w-full h-26 bg-[#f1f1f1] bottom-[0] left-[0] b-rd-t-80% text-center  text-3',
     'sys-edit-btn': 'inline-fcc gap-1 text-sm bg-slate/20 px-2 py-1 rounded-md transition-colors cursor-pointer hover:bg-slate/50',
     'gen-text-speak': 'w-36px h-36px m-t-6px cursor-pointer',
     'gen-speak-gray': 'fixed w-full h-full bg-[#fefefe] top-[0] left-[0] z-50 op-80',

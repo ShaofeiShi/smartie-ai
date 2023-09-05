@@ -51,3 +51,66 @@ export async function updateUserPeriod(userId) {
     `
   return await queryDb(sql)
 }
+
+/**
+ * 通过email查询用户注册开放api权限信息
+ */
+export async function findOneUserByEmail(email) {
+  email = escapeParam(email)
+  // const db = createDb()
+  let sql = `select * from users where email=${email} limit 1;`
+  const result = await queryDb(sql)
+  return result[0]
+}
+
+export async function findHasApiAuth(email) {
+  const user: any = await findOneUserByEmail(email);
+  let sql = `select * from openapi where user_id=${user.id} limit 1;`
+  const result = await queryDb(sql)
+  return result[0]
+}
+
+export async function addApiAuth(email, secretKey) {
+  const user: any = await findOneUserByEmail(email);
+  secretKey = escapeParam(secretKey)
+  email = escapeParam(email)
+  const userAuth = await getApiAuthByUserId(user.id)
+  if (userAuth) return
+  // 暂时appid 默认为 email
+  const sql = `insert into openapi (appid,secretKey,user_id,times) values (${email}, ${secretKey}, ${user.id}, 1000 );`
+  const result = await queryDb(sql)
+  return result
+}
+
+export async function getApiAuthByAppIdAndSecretKey(appId, secretKey) {
+  secretKey = escapeParam(secretKey)
+  appId = escapeParam(appId)
+  let sql = `select * from openapi where secretkey=${secretKey} and appid=${appId} limit 1;`
+  const result = await queryDb(sql)
+  return result[0]
+}
+
+export async function getApiAuthInfoByEmail(email) {
+  const user: any = await findOneUserByEmail(email);
+  let sql = `select * from openapi where user_id=${user.id} limit 1;`
+  const result = await queryDb(sql)
+  return result[0]
+}
+
+export async function getApiAuthByUserId(userId) {
+  let sql = `select times from openapi where user_id=${userId} limit 1;`
+  const result = await queryDb(sql)
+  return result[0]
+}
+
+export async function updateApiAuthByTimes(appId, secretKey, times) {
+  secretKey = escapeParam(secretKey)
+  appId = escapeParam(appId)
+  const sql = `
+        UPDATE openapi
+        SET times = ${times}
+        WHERE appid = ${appId} and secretkey = ${secretKey}
+    `
+  return await queryDb(sql)
+}
+

@@ -22,8 +22,8 @@ export const post: APIRoute = async(context) => {
     const res = await findOneUserByPwd(user, pass)
     if (res.length) {
       const { id, email, nickname, period_time } = res[0]
-      const token = generateToken({ id, nickname, period_time })
-      result.data = { id, nickname, period_time }
+      const token = generateToken({ id, nickname, period_time, email })
+      result.data = { id, nickname, period_time, email }
       context.cookies.set('token', token, { path: '/', httpOnly: true, maxAge: 1000 * 60 * 60 * 24, sameSite: 'strict' })
     } else {
       result.code = -1

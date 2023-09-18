@@ -13,6 +13,7 @@ const enc = tiktoken.encodingForModel("gpt-3.5-turbo-16k")
 
 
 const apiKey = import.meta.env.OPENAI_API_KEY
+const apiAdminKey = import.meta.env.OPENAI_API_ADMIN_KEY
 const httpsProxy = import.meta.env.HTTPS_PROXY
 const baseUrl = ((import.meta.env.OPENAI_API_BASE_URL) || 'https://api.openai.com').trim().replace(/\/$/, '')
 // const sitePassword = import.meta.env.SITE_PASSWORD
@@ -20,7 +21,7 @@ const baseUrl = ((import.meta.env.OPENAI_API_BASE_URL) || 'https://api.openai.co
 export const post: APIRoute = async(context) => {
   const body = await context.request.json()
   const token = context.cookies.get('token').value
-  const { sign, time, messages, modelType } = body
+  const { sign, time, messages, modelType, isAdmin } = body
   if (!messages) {
     return new Response(JSON.stringify({
       error: {
@@ -70,7 +71,7 @@ export const post: APIRoute = async(context) => {
     }
     return arr;
   }, []).reverse()
-  const initOptions = generatePayload(apiKey, messageCurrent, modelType)
+  const initOptions = generatePayload(isAdmin ? apiAdminKey : apiKey, messageCurrent, modelType)
   // #vercel-disable-blocks
   if (httpsProxy)
     initOptions.dispatcher = new ProxyAgent(httpsProxy)

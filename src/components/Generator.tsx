@@ -99,6 +99,7 @@ export default () => {
         body: JSON.stringify({
           messages: requestMessageList,
           modelType: localStorage.getItem('gpt-model') || '3.5',
+          isAdmin: localStorage.getItem('isAdmin'),
           time: timestamp,
           pass: storagePassword,
           sign: await generateSignature({

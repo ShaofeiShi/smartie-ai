@@ -2,10 +2,11 @@
 import { ProxyAgent, fetch } from 'undici'
 import { createRequire } from "module"
 // #vercel-end
-import { generatePayload, parseOpenAIStream } from '@/utils/openAI'
+import { generatePayload, parseOpenAIStream, generateAzurePayload } from '@/utils/openAI'
 import { verifySignature } from '@/utils/auth'
 import { verifyToken } from '@/utils/jwt'
 import type { APIRoute } from 'astro'
+import { aZureOpenAI, parseAzureOpenAIStream } from '@/utils/azureAI'
 
 const require = createRequire(import.meta.url)
 const tiktoken = require('tiktoken-node')
@@ -71,7 +72,7 @@ export const post: APIRoute = async(context) => {
     }
     return arr;
   }, []).reverse()
-  const initOptions = generatePayload(isAdmin ? apiAdminKey : apiKey, messageCurrent, modelType)
+  const initOptions = generatePayload(isAdmin ? apiAdminKey : apiAdminKey, messageCurrent, modelType)
   // #vercel-disable-blocks
   if (httpsProxy)
     initOptions.dispatcher = new ProxyAgent(httpsProxy)
@@ -79,15 +80,29 @@ export const post: APIRoute = async(context) => {
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
-  const response = await fetch(`${baseUrl}/v1/chat/completions`, initOptions).catch((err: Error) => {
-    console.error(err)
-    return new Response(JSON.stringify({
-      error: {
-        code: err.name,
-        message: err.message,
-      },
-    }), { status: 500 })
-  }) as Response
+  // console.log(messages, 'messages')
+  // for await (const event of response) {
+  //   for (const choice of event.choices) {
+  //     const delta = choice.delta?.content;
+  //     if (delta !== undefined) {
+  //       console.log(`Chatbot: ${delta}`);
+  //     }
+  //   }
+  // }
+  const response = await aZureOpenAI(modelType, messages)
+  console.log(response, 'response')
+  return parseAzureOpenAIStream(response) as Response
 
-  return parseOpenAIStream(response) as Response
+
+  // const response = await fetch(`${baseUrl}/v1/chat/completions`, initOptions).catch((err: Error) => {
+  //   console.error(err)
+  //   return new Response(JSON.stringify({
+  //     error: {
+  //       code: err.name,
+  //       message: err.message,
+  //     },
+  //   }), { status: 500 })
+  // }) as Response
+  // console.log(response, 'response')
+  // return parseOpenAIStream(response) as Response
 }

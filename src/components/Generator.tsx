@@ -115,27 +115,25 @@ export default () => {
         setCurrentError(error.error)
         throw new Error('Request failed')
       }
-      const data = response.body
+      const data = await response.json()
       if (!data)
         throw new Error('No data')
 
-      const reader = data.getReader()
-      const decoder = new TextDecoder('utf-8')
-      let done = false
+      /** 原openAI的流失输出 */
+      while(data.length > 0) {
+        const item = data.shift();
 
-      while (!done) {
-        const { value, done: readerDone } = await reader.read()
-        if (value) {
-          const char = decoder.decode(value)
-          if (char === '\n' && currentAssistantMessage().endsWith('\n'))
-            continue
-
-          if (char)
-            setCurrentAssistantMessage(currentAssistantMessage() + char)
-
-          smoothToBottom()
+        if (item && item.finishReason !== 'stop') {
+          const char = item.delta.content;
+          if (char === '\n' && currentAssistantMessage().endsWith('\n')) {
+          } else {
+            if (char) {
+              const text = await asyncRenderText(char)
+              console.log(text, 'asyncRenderText')
+            }
+          }
+        } else {
         }
-        done = readerDone
       }
     } catch (e) {
       console.error(e)
@@ -144,6 +142,16 @@ export default () => {
       return
     }
     archiveCurrentMessage()
+  }
+
+  const asyncRenderText = (char) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+          setCurrentAssistantMessage(currentAssistantMessage() + char)
+          smoothToBottom()
+          resolve(null)
+        }, 20);
+    })
   }
 
   const archiveCurrentMessage = () => {

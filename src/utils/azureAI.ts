@@ -6,7 +6,8 @@ import type { ParsedEvent, ReconnectInterval } from 'eventsource-parser'
 const require = createRequire(import.meta.url)
 const { OpenAIClient, AzureKeyCredential } = require("@azure/openai");
 
-const endpoint = "https://edy01.openai.azure.com/"
+// const endpoint = "https://edy01.openai.azure.com/"
+const endpoint = "https://edy01.edianzu.cn/"
 const azureApiKey = 'b764c64b2e0c431cb43e1058e9f053dd'
 
 const client = new OpenAIClient(endpoint, new AzureKeyCredential(azureApiKey));

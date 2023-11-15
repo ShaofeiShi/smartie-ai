@@ -5,8 +5,6 @@ import type { ParsedEvent, ReconnectInterval } from "eventsource-parser"
 const require = createRequire(import.meta.url)
 const { OpenAIClient, AzureKeyCredential } = require("@azure/openai")
 
-const endpoint = "https://edygpt-4.openai.azure.com/"
-const azureApiKey = "76f97b3fe81643c99a97f7e90313d9a1"
 
 const key35 = import.meta.env.AZURE_OPENAI_API_KEY_35
 const url35 = import.meta.env.AZURE_OPENAI_API_URL_35

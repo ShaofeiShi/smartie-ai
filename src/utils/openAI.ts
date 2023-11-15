@@ -33,7 +33,7 @@ export const parseOpenAIStream = (rawResponse: Response) => {
   }
 
   const stream = new ReadableStream({
-    async start(controller) {
+    async start(controller) { 
       const streamParser = (event: ParsedEvent | ReconnectInterval) => {
         if (event.type === 'event') {
           const data = event.data

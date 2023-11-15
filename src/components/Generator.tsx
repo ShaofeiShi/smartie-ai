@@ -98,7 +98,7 @@ export default () => {
         method: 'POST',
         body: JSON.stringify({
           messages: requestMessageList,
-          modelType: localStorage.getItem('gpt-model') || '3.5',
+          modelType: localStorage.getItem('gpt-model') || '35',
           isAdmin: localStorage.getItem('isAdmin'),
           time: timestamp,
           pass: storagePassword,
@@ -115,25 +115,27 @@ export default () => {
         setCurrentError(error.error)
         throw new Error('Request failed')
       }
-      const data = await response.json()
+      const data = response.body
       if (!data)
         throw new Error('No data')
 
-      /** 原openAI的流失输出 */
-      while(data.length > 0) {
-        const item = data.shift();
+      const reader = data.getReader()
+      const decoder = new TextDecoder('utf-8')
+      let done = false
 
-        if (item && item.finishReason !== 'stop') {
-          const char = item.delta.content;
-          if (char === '\n' && currentAssistantMessage().endsWith('\n')) {
-          } else {
-            if (char) {
-              const text = await asyncRenderText(char)
-              console.log(text, 'asyncRenderText')
-            }
-          }
-        } else {
+      while (!done) {
+        const { value, done: readerDone } = await reader.read()
+        if (value) {
+          const char = decoder.decode(value)
+          if (char === '\n' && currentAssistantMessage().endsWith('\n'))
+            continue
+
+          if (char)
+            setCurrentAssistantMessage(currentAssistantMessage() + char)
+
+          smoothToBottom()
         }
+        done = readerDone
       }
     } catch (e) {
       console.error(e)
@@ -142,16 +144,6 @@ export default () => {
       return
     }
     archiveCurrentMessage()
-  }
-
-  const asyncRenderText = (char) => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-          setCurrentAssistantMessage(currentAssistantMessage() + char)
-          smoothToBottom()
-          resolve(null)
-        }, 20);
-    })
   }
 
   const archiveCurrentMessage = () => {

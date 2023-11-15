@@ -19,7 +19,7 @@ const httpsProxy = import.meta.env.HTTPS_PROXY
 const baseUrl = ((import.meta.env.OPENAI_API_BASE_URL) || 'https://api.openai.com').trim().replace(/\/$/, '')
 // const sitePassword = import.meta.env.SITE_PASSWORD
 
-export const post: APIRoute = async(context) => {
+export const post: APIRoute = async (context) => {
   const body = await context.request.json()
   const token = context.cookies.get('token').value
   const { sign, time, messages, modelType, isAdmin } = body
@@ -41,13 +41,13 @@ export const post: APIRoute = async(context) => {
       },
     }), { status: 401 })
   }
-  if (now > periodTime) {
-    return new Response(JSON.stringify({
-      error: {
-        message: '您的会员已过期.',
-      },
-    }), { status: 403 })
-  }
+  // if (now > periodTime) {
+  //   return new Response(JSON.stringify({
+  //     error: {
+  //       message: '您的会员已过期.',
+  //     },
+  //   }), { status: 403 })
+  // }
   // if (sitePassword && sitePassword !== pass) {
   //   return new Response(JSON.stringify({
   //     error: {
@@ -72,10 +72,26 @@ export const post: APIRoute = async(context) => {
     }
     return arr;
   }, []).reverse()
-  const initOptions = generatePayload(isAdmin ? apiAdminKey : apiAdminKey, messageCurrent, modelType)
+
+  if (modelType === '35-2') { // 旧版的openAI的逻辑保留备用
+    const initOptions = generatePayload(apiKey, messageCurrent, modelType)
+    if (httpsProxy)
+      initOptions.dispatcher = new ProxyAgent(httpsProxy)
+    const response = await fetch(`${baseUrl}/v1/chat/completions`, initOptions).catch((err: Error) => {
+      return new Response(JSON.stringify({
+        error: {
+          code: err.name,
+          message: err.message,
+        },
+      }), { status: 500 })
+    }) as Response
+    return parseOpenAIStream(response) as Response
+
+  } else { // 新版的微软ai的接口服务
+    const response = await aZureOpenAI(modelType, messages)
+    return parseAzureOpenAIStream(response) as Response
+  }
   // #vercel-disable-blocks
-  if (httpsProxy)
-    initOptions.dispatcher = new ProxyAgent(httpsProxy)
   // #vercel-end
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -89,20 +105,8 @@ export const post: APIRoute = async(context) => {
   //     }
   //   }
   // }
-  const response = await aZureOpenAI(modelType, messages)
-  console.log(response, 'response')
-  return parseAzureOpenAIStream(response) as Response
 
 
-  // const response = await fetch(`${baseUrl}/v1/chat/completions`, initOptions).catch((err: Error) => {
-  //   console.error(err)
-  //   return new Response(JSON.stringify({
-  //     error: {
-  //       code: err.name,
-  //       message: err.message,
-  //     },
-  //   }), { status: 500 })
-  // }) as Response
-  // console.log(response, 'response')
-  // return parseOpenAIStream(response) as Response
+
+
 }

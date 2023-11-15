@@ -64,7 +64,6 @@ export const post: APIRoute = async(context) => {
   // #vercel-end
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment3w
-  // @ts-expect-error
   const response = await fetch(`${baseUrl}/v1/chat/completions`, initOptions).catch((err: Error) => {
     console.error(err)
     return new Response(JSON.stringify({
